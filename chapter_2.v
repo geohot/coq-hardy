@@ -64,7 +64,12 @@ Proof.
   intros m dn dnk.
 
   assert (mn2 : Z.abs m <> 2).
-  admit.
+  {
+    clear dnk.
+    destruct dn.
+    unfold F in H.
+    admit.
+  }
   
   assert ((F n)|((F (n+k))-2)).
   admit.
@@ -78,9 +83,19 @@ Proof.
   intros.
   destruct H0.
   split; auto.
-
   clear H dnk.
+
+  assert (m|(-2)).
+  exists x.
+  apply H0.
+  apply Zdivide_opp_r in H.
+  simpl in H.
   
-  
+  specialize (prime_divisors 2 prime_2 m).
+  intros. apply H1 in H. clear H1.
+
+  destruct H. rewrite H. auto with zarith.
+  destruct H. rewrite H. auto with zarith.
+  destruct H; (rewrite H in mn2; simpl in mn2; contradiction).
 Abort.
 
