@@ -98,9 +98,53 @@ Proof.
     ring.
   }
   
-  
   assert ((F n)|((F (n+k))-2)).
-  admit.
+  {
+    clear dn dnk mn2 m.
+    unfold F.
+    rewrite Z.pow_add_r; try omega.
+    rewrite Z.pow_mul_r; auto with zarith.
+    pose (x := 2 ^ 2 ^ n).
+    fold x.
+
+    pose (mk := k-1).
+    assert (k = mk+1). omega.
+    rewrite H.
+
+    replace (x ^ 2 ^ (mk + 1) + 1 - 2) with (x ^ 2 ^ (mk + 1) - 1); [|ring].
+
+    pattern mk.
+    apply natlike_ind.
+    simpl.
+    exists (x-1).
+    replace (Z.pow_pos x 2) with (x*x).
+    ring.
+    unfold Z.pow_pos.
+    unfold Pos.iter.
+    ring.
+    
+    intros.
+    replace (Z.succ x0 + 1) with (Z.succ (x0 + 1)); [|ring].
+    rewrite Z.pow_succ_r.
+
+    pose (t := 2 ^ (x0 + 1)).
+    fold t in H1.
+    fold t.
+
+    destruct H1.
+    exists (x1*(x^t+1)).
+    replace (2*t) with (t+t); [|ring].
+    rewrite Zpower_exp; unfold t; try apply Z.ge_le_iff; auto with zarith.
+    fold t.
+    
+    rewrite <- Z.mul_assoc.
+    rewrite (Z.mul_comm (x ^ t + 1) (x + 1)).
+    rewrite -> Z.mul_assoc.
+    rewrite <- H1.
+    ring.
+    omega.
+    omega.
+  }
 
   specialize (Z.divide_trans m (F n) (F (n + k) - 2)).
   intros.
@@ -125,5 +169,6 @@ Proof.
   destruct H. rewrite H. auto with zarith.
   destruct H. rewrite H. auto with zarith.
   destruct H; (rewrite H in mn2; simpl in mn2; contradiction).
-Abort.
+Qed.
+
 
