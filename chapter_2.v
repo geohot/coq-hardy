@@ -57,19 +57,47 @@ Proof.
 Qed.
 
 Theorem theorem_16 : forall n k : Z,
-    rel_prime (F n) (F (n+k)).
+    n > 0 /\ k > 0 -> rel_prime (F n) (F (n+k)).
 Proof.
-  intros.
+  intros n k [ngz kgz].
   constructor; auto with zarith.
   intros m dn dnk.
-
+  
   assert (mn2 : Z.abs m <> 2).
   {
     clear dnk.
+    unfold F in dn.
+    red.
+    intros.
+    apply Zdivide_Zabs_inv_l in dn.
+    rewrite H in dn.
+    clear H m k kgz.
+  
     destruct dn.
-    unfold F in H.
-    admit.
+    assert (Zodd (2 ^ 2 ^ n + 1)).
+    replace (2 ^ n) with ((2 ^ n) - 1 + 1); [|ring].
+    rewrite Zpower_exp.
+    rewrite Zodd_ex_iff.
+    exists (2 ^ (2 ^ n - 1)).
+    rewrite Z.pow_1_r.
+    rewrite Z.mul_comm.
+    reflexivity.
+    
+    (* stupid proof of 2 ^ n - 1 >= 0 *)
+    apply Z.ge_le_iff.
+    apply Z.lt_le_pred.
+    apply Z.pow_pos_nonneg; omega.
+    omega.
+
+    rewrite H in H0.
+    apply Zodd_not_Zeven in H0.
+    apply H0.
+    
+    apply Zeven_ex_iff.
+    exists x.
+    ring.
   }
+  
   
   assert ((F n)|((F (n+k))-2)).
   admit.
