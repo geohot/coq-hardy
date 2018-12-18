@@ -26,6 +26,23 @@ Proof.
   auto.
 Qed.
 
+(* Theorem 4: The number of primes is infinite *)
+(*    have a coq proof for this, but it's long and ugly, clean it up first *)
+Theorem infinite_primes: forall n : Z, exists p : Z, p > n /\ prime p.
+Proof.
+Abort.
 
+(* Theorem 5: Consecutive composites of arbitrary length exist *)
+Theorem theorem_5: forall n : Z, exists c : Z, forall x : Z, c <= x < c+n -> ~(prime x).
+Proof.
+Abort.
 
-                                    
+(* heh *)
+Theorem twin_prime_conjecture: forall n : Z, exists p : Z, p > n /\ prime p /\ prime (p+2).
+Proof.
+Abort.
+
+(* Theorem 6: The prime number theorem pi(x) ~ x/(log x) *)
+(*   Hmm, well they don't prove this is chapter 1... *)
+(* Theorems 7,8,9 are similar *)
+
