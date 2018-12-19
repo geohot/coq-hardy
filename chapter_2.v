@@ -38,6 +38,8 @@ Proof.
 Abort.
 
 (* Theorem 16: No two Fermat numbers have a gcd > 1 *)
+
+(* try an inductive definition here? *)
 Definition F (n : Z) := 2^2^n + 1.
 
 Lemma div_minus_trans : forall m a b : Z, (m|a) /\ (m|(a+b)) -> (m | b).
@@ -170,5 +172,87 @@ Proof.
   destruct H. rewrite H. auto with zarith.
   destruct H; (rewrite H in mn2; simpl in mn2; contradiction).
 Qed.
+
+
+(* Theorem 17 *)
+Theorem theorem_17 :
+  forall a n : Z, a >= 2 /\ prime (a^n + 1) -> Zeven a /\ exists m : Z, n = 2^m.
+Proof.
+Abort.
+
+(* Theorem 18 *)
+Lemma div_am1_anm1 : forall a n : Z, n >= 0 -> ((a - 1) | (a^n - 1)).
+Proof.
+  intros a n ng0.
+
+  pattern n.
+  apply natlike_ind; [exists 0; reflexivity| |omega].
+
+  intros.
+  destruct H0.
+  
+  rewrite Z.pow_succ_r; [|assumption].
+  
+  exists (x0*a + 1).
+  symmetry.
+  rewrite -> Z.mul_add_distr_r.
+  rewrite <- Z.mul_assoc.
+  rewrite (Z.mul_comm a (a-1)).
+  rewrite -> Z.mul_assoc.
+  rewrite <- H0.
+  ring.
+Qed.
+      
+Theorem theorem_18 :
+  forall a n : Z, a > 0 /\ n > 1 /\ prime (a^n - 1) -> a = 2 /\ prime n.
+Proof.
+  intros a n [agt0 [ngt1 pan]].
+  
+  assert (ai2 : a = 2).
+
+  assert (~(a > 2)).
+  intros agt2.
+
+  induction pan.
+  specialize (H0 (a - 1)).
+  destruct H0.
+
+  split.
+  omega.
+  admit.
+
+  specialize (H2 (a - 1)).
+  destruct H2.
+  exists 1; omega.
+  apply div_am1_anm1.
+  omega.
+
+  specialize (Z.eq_mul_1_nonneg (a-1) x).
+  intros die.
+  destruct die; try omega.
+
+  rewrite Z.mul_comm.
+  rewrite <- H2.
+  reflexivity.
+
+  assert (a <> 1).
+  {
+    intros eq.
+    rewrite eq in pan.
+    rewrite Z.pow_1_l in pan.
+    simpl in pan.
+    apply not_prime_0 in pan.
+    apply pan.
+    omega.
+  }
+
+  omega.
+  split.
+  assumption.
+
+  rewrite ai2 in pan.
+  clear ai2 agt0 a.
+
+Abort.
 
 
