@@ -362,3 +362,22 @@ Proof.
   assumption.
 Qed.
 
+(* Theorem 19: prime series is divergent *)
+
+(* Theorem 20: stuff about pi(x) *)
+
+(* Theorem 21: no polynomial is prime for all n *)
+
+(* Theorem 22: all polynomials have infinite composites *)
+
+(* Theorem 23 *)
+
+(* Theorem 24 *)
+
+(* Theorem 25 *)
+
+(* Theorem 26 *)
+
+(* Theorem 27 *)
+
+
