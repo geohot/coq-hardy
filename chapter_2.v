@@ -203,38 +203,75 @@ Proof.
   ring.
 Qed.
 
-Lemma div2k : forall n k : Z, (k|n) -> ((2 ^ k - 1) | (2 ^ n - 1)).
+Search (_ <= _ -> _ >= _).
+
+Lemma div2k : forall n k : Z, k>0 /\ n>0 /\ (k|n) -> ((2 ^ k - 1) | (2 ^ n - 1)).
 Proof.
-  intros.
+  intros n k [knz [nnz H]].
   destruct H.
   rewrite H.
+
+  pattern x.
+  apply natlike_ind.
+  exists 0.
+  rewrite Zmult_0_l.
+  simpl.
+  reflexivity.
+
+  intros.
+  replace (Z.succ x0 * k) with (x0 * k + k); [|ring].
+  destruct H1.
+  assert (2 ^ (x0 * k) = x1 * (2 ^ k - 1) + 1).
+  rewrite <- H1.
+  ring.
+
+  rewrite Zpower_exp.
+  rewrite H2.
+  rewrite Z.mul_add_distr_r.
+  rewrite Z.mul_1_l.
+  rewrite Z.mul_sub_distr_l.
+  rewrite Z.mul_sub_distr_r.
+
+  exists ((x1 * 2 ^ k + 1)).
+  ring.
   
-Admitted.
+  apply Z.le_ge.
+  apply Z.mul_nonneg_nonneg.
+  assumption.
+  omega.
+  omega.
 
-
+  rewrite H in nnz.
+  apply Z.gt_lt in nnz.
+  apply Z.mul_pos_cancel_r in nnz.
+  omega.
+  omega.
+Qed.
+  
 Lemma prime_2nm1_prime_n : forall n : Z, prime (2^n - 1) -> prime n.
 Proof.
   intros.
-  
-  assert (n > 1).
-  apply prime_ge_2 in H.
-  apply Z.le_le_succ_r in H.
-  replace (Z.succ (2 ^ n - 1)) with (2 ^ n) in H.
-  specialize (Zpower_le_monotone 2 1 n).
-  intros eq.
-  destruct eq.
-  omega.
-  admit.
-                            
 
-  
-  simpl.
-  
+  assert (nn1 : n <> 1).
+  red. intros. rewrite H0 in H. simpl in H. apply not_prime_1 in H. apply H.
 
+  assert (nn0 : n <> 0).
+  red. intros. rewrite H0 in H. simpl in H. apply not_prime_0 in H. apply H.
   
-  
-  (* prime_ge_2 *)
-  admit.
+  assert (~(n < 0)).
+  {
+    apply prime_ge_2 in H.
+    apply Z.le_le_succ_r in H.
+    replace (Z.succ (2 ^ n - 1)) with (2 ^ n) in H; [|omega].
+    red.
+    intros.
+    specialize (Z.pow_neg_r 2 n).
+    intros eq.
+    apply eq in H0.
+    rewrite H0 in H.
+    simpl.
+    omega.
+  }
   
   case (prime_dec n); auto.
   intros.
@@ -262,6 +299,8 @@ Proof.
   omega.
   
   apply div2k.
+  split. omega.
+  split. omega.
   apply H2.
 Qed.
 
@@ -322,5 +361,4 @@ Proof.
   apply prime_2nm1_prime_n.
   assumption.
 Qed.
-
 
