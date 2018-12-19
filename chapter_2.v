@@ -203,10 +203,68 @@ Proof.
   ring.
 Qed.
 
+Lemma div2k : forall n k : Z, (k|n) -> ((2 ^ k - 1) | (2 ^ n - 1)).
+Proof.
+  intros.
+  destruct H.
+  rewrite H.
+  
+Admitted.
+
+
 Lemma prime_2nm1_prime_n : forall n : Z, prime (2^n - 1) -> prime n.
 Proof.
   intros.
-Admitted.
+  
+  assert (n > 1).
+  apply prime_ge_2 in H.
+  apply Z.le_le_succ_r in H.
+  replace (Z.succ (2 ^ n - 1)) with (2 ^ n) in H.
+  specialize (Zpower_le_monotone 2 1 n).
+  intros eq.
+  destruct eq.
+  omega.
+  admit.
+                            
+
+  
+  simpl.
+  
+
+  
+  
+  (* prime_ge_2 *)
+  admit.
+  
+  case (prime_dec n); auto.
+  intros.
+  specialize (not_prime_divide n).
+  intros eq. destruct eq.
+  omega.
+  assumption.
+  destruct H1.
+
+  apply prime_alt in H.
+  unfold prime' in H.
+  destruct H.
+  specialize (H3 (2^x - 1)).
+
+  destruct H3.
+  split.
+  replace 1 with (2^1-1); [|reflexivity].
+  apply Z.sub_lt_mono_r.
+  apply Zpower_lt_monotone.
+  omega.
+  omega.
+  apply Z.sub_lt_mono_r.
+  apply Zpower_lt_monotone.
+  omega.
+  omega.
+  
+  apply div2k.
+  apply H2.
+Qed.
+
       
 Theorem theorem_18 :
   forall a n : Z, a > 0 /\ n > 1 /\ prime (a^n - 1) -> a = 2 /\ prime n.
