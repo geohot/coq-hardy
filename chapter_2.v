@@ -202,6 +202,11 @@ Proof.
   rewrite <- H0.
   ring.
 Qed.
+
+Lemma prime_2nm1_prime_n : forall n : Z, prime (2^n - 1) -> prime n.
+Proof.
+  intros.
+Admitted.
       
 Theorem theorem_18 :
   forall a n : Z, a > 0 /\ n > 1 /\ prime (a^n - 1) -> a = 2 /\ prime n.
@@ -219,7 +224,10 @@ Proof.
 
   split.
   omega.
-  admit.
+
+  rewrite <- Z.sub_lt_mono_r.
+  rewrite <- (Z.pow_1_r a) at 1.
+  apply Zpower_lt_monotone; try omega.
 
   specialize (H2 (a - 1)).
   destruct H2.
@@ -253,6 +261,8 @@ Proof.
   rewrite ai2 in pan.
   clear ai2 agt0 a.
 
-Abort.
+  apply prime_2nm1_prime_n.
+  assumption.
+Qed.
 
 
