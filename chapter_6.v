@@ -1,11 +1,26 @@
 Require Export ZArith.
 Require Export Znumtheory.
 Require Export Zpow_facts.
+(*Require Export Binomial.
+Require Export Rdefinitions.*)
 
-Check Z.pow_pos.
-Search (0 ^ _).
+Definition nCr n r : Z := Z.of_nat ((fact n) / (fact r * fact (n-r))).
+
+(*Search ((_:nat -> Z) (_:nat)).*)
+
+Fixpoint sum_fZ (f:nat -> Z) (n:nat): Z :=
+  match n with
+  | O => f 0%nat
+  | S i => sum_fZ f i + f (S i)
+  end.
+
+Lemma zbinomial : forall (x y n:Z),
+    (x + y) ^ n = sum_fZ (fun i:nat => nCr (Z.to_nat n) i * x ^ (Z.of_nat i) * y ^ (Z.of_nat ((Z.to_nat n)-i))) (Z.to_nat n).
+Proof.
+Admitted.
 
 (* Theorem 70 *)
+
 Lemma freshmans_dream : forall p : Z, prime p -> forall x y : Z, (x + y)^p mod p = (x^p+y^p) mod p.
 Proof.
 Admitted.
@@ -37,10 +52,42 @@ Proof.
   omega.
 Qed.
 
+Search (_ * _ = _ * _).
+
 (* Theorem 71 *)
-Theorem fermats_theorem : forall a p : Z, prime p /\ ~(p|a) -> a^(p-1) mod p = 1.
+Lemma mod_mul_cancel_l : forall p q r n : Z, ~(n|r) -> (r * p) mod n = (r * q) mod n <-> p mod n = q mod n.
 Proof.
-Abort.
+  intros.
+  split.
+  
+  intros eq.
+  
+  admit.
+
+  intros eq.
+  rewrite <- Zmult_mod_idemp_r.
+  rewrite eq.
+  rewrite -> Zmult_mod_idemp_r.
+  reflexivity.
+Admitted.                     
+
+Theorem fermats_theorem : forall a p : Z, a>=0 -> prime p /\ ~(p|a) -> a^(p-1) mod p = 1 mod p.
+Proof.
+  intros a p age0 [H H0].
+
+  rewrite <- (mod_mul_cancel_l _ _ a).
+  rewrite <- Z.pow_succ_r.
+  replace (Z.succ (p - 1)) with p; [|omega].
+  rewrite Z.mul_1_r.
+  rewrite theorem_70.
+  reflexivity.
+  
+  - apply H.
+  - apply age0.
+  - apply prime_ge_2 in H.
+    omega.
+  - apply H0.
+Qed.
 
 (* Theorem 72 : a^phi(m) mod m = 1 *)
 
