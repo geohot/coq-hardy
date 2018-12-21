@@ -55,13 +55,13 @@ Qed.
 Search (_ * _ = _ * _).
 
 (* Theorem 71 *)
-Lemma mod_mul_cancel_l : forall p q r n : Z, ~(n|r) -> (r * p) mod n = (r * q) mod n <-> p mod n = q mod n.
+Lemma mod_mul_cancel_l : forall p q r n : Z, prime n /\ ~(n|r) -> (r * p) mod n = (r * q) mod n <-> p mod n = q mod n.
 Proof.
   intros.
   split.
   
   intros eq.
-  
+  (* hmm, is this actually true, or only if n is prime... *)  
   admit.
 
   intros eq.
@@ -86,7 +86,9 @@ Proof.
   - apply age0.
   - apply prime_ge_2 in H.
     omega.
-  - apply H0.
+  - split.
+    + apply H.
+    + apply H0.
 Qed.
 
 (* Theorem 72 : a^phi(m) mod m = 1 *)
