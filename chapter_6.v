@@ -61,7 +61,9 @@ Proof.
   split.
   
   intros eq.
-  (* hmm, is this actually true, or only if n is prime... *)  
+  (* hmm, is this actually true, or only if n is prime... *)
+  
+
   admit.
 
   intros eq.
@@ -71,10 +73,34 @@ Proof.
   reflexivity.
 Admitted.                     
 
-Theorem fermats_theorem : forall a p : Z, a>=0 -> prime p /\ ~(p|a) -> a^(p-1) mod p = 1 mod p.
+Theorem fermats_theorem : forall a p : Z, a>=0 -> prime p /\ ~(p|a) -> a^(p-1) mod p = 1.
 Proof.
   intros a p age0 [H H0].
 
+  (* so basically it comes down to the fact that a must have an inverse mod p *)
+
+  (*
+  replace (a ^ (p - 1) mod p = 1) with (p|(a ^ (p - 1) - 1)).
+  unfold Z.divide.
+
+  specialize (theorem_70 p).
+  intros eq.
+  apply eq with (a:=a) in H.
+  clear eq.
+
+  replace (a ^ p mod p = a mod p) with (p | (a ^ p - a)) in H.
+  destruct H.
+  exists x.
+  rewrite <- (Z.mul_cancel_l _ _ a).
+  *)
+
+  replace 1 with (1 mod p) at 2.
+  2 : {
+    apply Zmod_small.
+    apply prime_ge_2 in H.
+    omega.
+  }
+  
   rewrite <- (mod_mul_cancel_l _ _ a).
   rewrite <- Z.pow_succ_r.
   replace (Z.succ (p - 1)) with p; [|omega].
