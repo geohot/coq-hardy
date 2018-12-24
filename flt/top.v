@@ -3,7 +3,7 @@ Require Import Coq.omega.Omega.
 
 (* see http://www.cs.rug.nl/~wim/fermat/wilesEnglish.html for proof sketch *)
 
-Theorem theorem_1 : exists n, (exists a b c, a^n + b^n = c^n) -> (exists a b c, a^n + b^n = c^n /\ (coprime a b)).
+Theorem theorem_1 : forall n, (exists a b c, a^n + b^n = c^n) -> (exists a b c, a^n + b^n = c^n /\ (coprime a b)).
 Proof.
 Admitted.
 
@@ -24,6 +24,7 @@ Admitted.
 Theorem fermats_last_theorem : ~exists a b c n, a^n + b^n = c^n /\ n > 2.
 Proof.
   red.
+  
   intros [a [b [c [n [eq ngt]]]]].
   assert (nn4 : n <> 4). {
     specialize (theorem_2 a b c).
@@ -45,6 +46,15 @@ Proof.
   split; assumption.
   clear a b c n eq ngt4.
   rename x into a.
-  destruct H as [b [c [n [eq [pn ngt]]]]].
+  destruct H as [b [c [n [ngt [pn eq]]]]].
+
+  specialize (theorem_1 n).
+  intros.
+  destruct H.
+  exists a,b,c.
+  assumption.
+  clear a b c eq.
+  rename x into a.
+  destruct H as [b [c [eq coab]]].
 Abort.
   
