@@ -47,3 +47,13 @@ Proof.
     assumption.
 Qed.
 
+(* Theorem 46: log10(2) is irrational *)
+Theorem log102_irrational a b : a > 0 -> 2^b <> 10^a.
+Proof.
+  red.
+  intros anz H.
+Abort.
+
+(* Theorem 47: e is irrational *)
+
+
