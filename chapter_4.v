@@ -22,12 +22,9 @@ Proof.
   now destruct H0.
   
   assert (bnz : b > 0).
-  apply Nat.nle_gt.
-  red; intros.
-  specialize (zerop b).
-  intros.
-  destruct H3; try omega.
-  rewrite e in eq.
+  specialize (gt_0_eq b).
+  intros [|]; [assumption|].
+  rewrite <- H2 in eq.
   simpl in eq.
   apply Nat.eq_mul_0 in eq.
   destruct eq; omega.
@@ -50,12 +47,8 @@ Proof.
     rewrite Nat.mul_comm in eq.
     rewrite eq.
     reflexivity.
-Qed. 
-  
-  
-  
-  
-  
+Qed.
+
 
   
   
